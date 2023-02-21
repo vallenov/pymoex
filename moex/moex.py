@@ -17,7 +17,7 @@ class MOEXObject:
     valid_items = []
 
     def __init__(self, url, child_item_cls: type):
-        if not hasattr(self, 'url') or not hasattr(self, 'valid_items'):
+        if not self.url or not self.valid_items:
             raise NotImplementedError
         self.url = os.path.join(url, self.url)
         for item in self.valid_items:
