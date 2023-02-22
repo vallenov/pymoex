@@ -94,14 +94,18 @@ class MOEX:
     engines = Engines(url)
     history = History(url)
 
+    def index(self, return_type='json'):
+        return os.path.join(self.url, f'index.{return_type}')
 
-m = MOEX()
-print(m.engines.securities())
-print(m.engines.stock.securities())
-print(m.engines.stock.markets.securities(date='2022-03-12'))
-print(m.engines.stock.markets.shares.securities())
-print(m.history.engines.securities())
-print(m.history.engines.stock.securities(return_type='xml'))
-print(m.history.engines.stock.markets.securities())
-print(m.history.engines.stock.markets.shares.securities(date='2022-03-12'))
+
+moex = MOEX()
+print(moex.index())
+print(moex.engines.securities())
+print(moex.engines.stock.securities())
+print(moex.engines.stock.markets.securities(date='2022-03-12'))
+print(moex.engines.stock.markets.shares.securities())
+print(moex.history.engines.securities())
+print(moex.history.engines.stock.securities(return_type='xml'))
+print(moex.history.engines.stock.markets.securities())
+print(moex.history.engines.stock.markets.shares.securities(date='2022-03-12'))
 
