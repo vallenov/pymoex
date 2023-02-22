@@ -5,6 +5,12 @@ import settings
 
 
 class MOEXBase:
+    url = ''
+
+    def __init__(self, url):
+        if not self.url:
+            raise ValueError('url is need to be fit')
+        self.url = os.path.join(url, self.url)
 
     def securities(
             self,
@@ -19,56 +25,72 @@ class MOEXBase:
         return url
 
 
-class MOEXMultiObject(MOEXBase):
-
-    def __init__(self, url: str, name: str = ''):
-        self.url = os.path.join(url, name)
+class Shares(MOEXBase):
+    url = 'shares'
 
 
-class MOEXObject(MOEXBase):
-    url = ''
-    valid_items = []
-
-    def __init__(self, url, child_item_cls: type = None):
-        if not self.url:
-            raise NotImplementedError
-        self.url = os.path.join(url, self.url)
-        for item in self.valid_items:
-            setattr(self, item, child_item_cls(self.url, item))
+class Bonds(MOEXBase):
+    url = 'bonds'
 
 
-class MultiMarketItem(MOEXMultiObject):
-    ...
+class Index(MOEXBase):
+    url = 'index'
 
 
-class Market(MOEXObject):
+class Markets(MOEXBase):
     url = 'markets'
-    valid_items = ['shares', 'bonds', 'index']
+
+    def __init__(self, url):
+        super().__init__(url)
+        self.shares = Shares(self.url)
+        self.bonds = Bonds(self.url)
+        self.index = Index(self.url)
 
 
-class MultiEngineItem(MOEXMultiObject):
+class Futures(MOEXBase):
+    url = 'futures'
 
-    def __init__(self, url, name):
-        super().__init__(url, name)
-        self.markets = Market(self.url, child_item_cls=MultiMarketItem)
+    def __init__(self, url):
+        super().__init__(url)
+        self.markets = Markets(self.url)
 
 
-class Engine(MOEXObject):
+class Currency(MOEXBase):
+    url = 'currency'
+
+    def __init__(self, url):
+        super().__init__(url)
+        self.markets = Markets(self.url)
+
+
+class Stock(MOEXBase):
+    url = 'stock'
+
+    def __init__(self, url):
+        super().__init__(url)
+        self.markets = Markets(self.url)
+
+
+class Engine(MOEXBase):
     url = 'engines'
-    valid_items = ['stock', 'currency', 'futures']
+
+    def __init__(self, url):
+        super().__init__(url)
+        self.stock = Stock(self.url)
+        self.currency = Currency(self.url)
 
 
-class History(MOEXObject):
+class History(MOEXBase):
     url = 'history'
 
     def __init__(self, url):
         super().__init__(url)
-        self.engines = Engine(self.url, child_item_cls=MultiEngineItem)
+        self.engines = Engine(self.url)
 
 
 class MOEX:
     url = 'https://iss.moex.com/iss'
-    engines = Engine(url, child_item_cls=MultiEngineItem)
+    engines = Engine(url)
     history = History(url)
 
 
