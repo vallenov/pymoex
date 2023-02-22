@@ -13,7 +13,7 @@ class MOEXBase:
     ):
         url = os.path.join(self.url, f'securities.{return_type}')
         if date:
-            if not re.match('^\d{4}-\d{2}-\d{2}$', date):
+            if not re.match(r'^\d{4}-\d{2}-\d{2}$', date):
                 raise ValueError('The right format is: YYYY-MM-DD')
             url += f'?date={date}'
         return url
@@ -78,7 +78,7 @@ print(m.engines.stock.securities())
 print(m.engines.stock.markets.securities(date='2022-03-12'))
 print(m.engines.stock.markets.shares.securities())
 print(m.history.engines.securities())
-print(m.history.engines.stock.securities())
+print(m.history.engines.stock.securities(return_type='xml'))
 print(m.history.engines.stock.markets.securities())
 print(m.history.engines.stock.markets.shares.securities(date='2022-03-12'))
 
