@@ -25,15 +25,15 @@ class MOEXBase:
         return url
 
 
-class Shares(MOEXBase):
+class MarketShares(MOEXBase):
     url = 'shares'
 
 
-class Bonds(MOEXBase):
+class MarketBonds(MOEXBase):
     url = 'bonds'
 
 
-class Index(MOEXBase):
+class MarketIndex(MOEXBase):
     url = 'index'
 
 
@@ -42,12 +42,12 @@ class Markets(MOEXBase):
 
     def __init__(self, url):
         super().__init__(url)
-        self.shares = Shares(self.url)
-        self.bonds = Bonds(self.url)
-        self.index = Index(self.url)
+        self.shares = MarketShares(self.url)
+        self.bonds = MarketBonds(self.url)
+        self.index = MarketIndex(self.url)
 
 
-class Futures(MOEXBase):
+class EngineFutures(MOEXBase):
     url = 'futures'
 
     def __init__(self, url):
@@ -55,7 +55,7 @@ class Futures(MOEXBase):
         self.markets = Markets(self.url)
 
 
-class Currency(MOEXBase):
+class EngineCurrency(MOEXBase):
     url = 'currency'
 
     def __init__(self, url):
@@ -63,7 +63,7 @@ class Currency(MOEXBase):
         self.markets = Markets(self.url)
 
 
-class Stock(MOEXBase):
+class EngineStock(MOEXBase):
     url = 'stock'
 
     def __init__(self, url):
@@ -71,13 +71,14 @@ class Stock(MOEXBase):
         self.markets = Markets(self.url)
 
 
-class Engine(MOEXBase):
+class Engines(MOEXBase):
     url = 'engines'
 
     def __init__(self, url):
         super().__init__(url)
-        self.stock = Stock(self.url)
-        self.currency = Currency(self.url)
+        self.stock = EngineStock(self.url)
+        self.currency = EngineCurrency(self.url)
+        self.futures = EngineFutures(self.url)
 
 
 class History(MOEXBase):
@@ -85,12 +86,12 @@ class History(MOEXBase):
 
     def __init__(self, url):
         super().__init__(url)
-        self.engines = Engine(self.url)
+        self.engines = Engines(self.url)
 
 
 class MOEX:
     url = 'https://iss.moex.com/iss'
-    engines = Engine(url)
+    engines = Engines(url)
     history = History(url)
 
 
