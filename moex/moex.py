@@ -104,9 +104,7 @@ class Engines(MOEXBase):
 
 
 class BoardMulti(MOEXBase):
-
-    def __init__(self, url):
-        super().__init__(os.path.join(url))
+    ...
 
 
 class Boards(MOEXBase):
@@ -518,6 +516,8 @@ print(moex.engines.stock.securities())
 print(moex.engines.stock.markets.securities(date='2022-03-12'))
 print(moex.engines.stock.markets.shares.securities())
 print(moex.engines.stock.markets.bonds.boards.securities(sid=12345))
+print(moex.engines.stock.markets.bonds.boards.ocby.securities())
+print(moex.history.engines.stock.markets.bonds.boards.ocby.securities())
 print(moex.history.engines.securities())
 print(moex.history.engines.stock.securities(return_type='xml'))
 print(moex.history.engines.stock.markets.securities())
