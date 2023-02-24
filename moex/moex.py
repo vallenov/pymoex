@@ -47,10 +47,15 @@ class MOEXBase:
 
     def securities(
             self,
-            return_type=settings.RETURN_TYPE,
-            date=None
+            sid: int = None,
+            return_type: str = settings.RETURN_TYPE,
+            date: str = None
     ):
         url = os.path.join(self.url, f'securities.{return_type}')
+        if sid and date:
+            raise ValueError('need just one value (sid or date)')
+        if sid:
+            url = os.path.join(self.url, 'securities', f'{sid}.{return_type}')
         if date:
             if not re.match(r'^\d{4}-\d{2}-\d{2}$', date):
                 raise ValueError('The right format is: YYYY-MM-DD')
@@ -134,6 +139,8 @@ class MOEX(MOEXBase):
 
 moex = MOEX()
 print(moex.index())
+print(moex.securities())
+print(moex.securities(sid=419728227))
 print(moex.engines.securities())
 print(moex.engines.stock.securities())
 print(moex.engines.stock.markets.securities(date='2022-03-12'))
