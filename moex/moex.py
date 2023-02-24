@@ -77,44 +77,6 @@ class MOEXBase:
         return self._make_request(url)
 
 
-class MarketMulti(MOEXBase):
-
-    def __init__(self, url):
-        super().__init__(url)
-        self.boards = Boards(self._join(self.url, 'boards'))
-
-
-class Markets(MOEXBase):
-
-    def __init__(self, url):
-        super().__init__(url)
-        self.shares = MarketMulti(self._join(self.url, 'shares'))
-        self.bonds = MarketMulti(self._join(self.url, 'bonds'))
-        self.index = MarketMulti(self._join(self.url, 'index'))
-
-
-class EngineMulti(MOEXBase):
-
-    def __init__(self, url):
-        super().__init__(url)
-        self.markets = Markets(self._join(self.url, 'markets'))
-
-
-class Engines(MOEXBase):
-
-    def __init__(self, url):
-        super().__init__(url)
-        self.stock = EngineMulti(self._join(self.url, 'stock'))
-        self.currency = EngineMulti(self._join(self.url, 'currency'))
-        self.futures = EngineMulti(self._join(self.url, 'futures'))
-        self.state = EngineMulti(self._join(self.url, 'state'))
-        self.offboard = EngineMulti(self._join(self.url, 'offboard'))
-        self.otc = EngineMulti(self._join(self.url, 'otc'))
-        self.commodity = EngineMulti(self._join(self.url, 'commodity'))
-        self.interventions = EngineMulti(self._join(self.url, 'interventions'))
-        self.agro = EngineMulti(self._join(self.url, 'agro'))
-
-
 class BoardMulti(MOEXBase):
     ...
 
@@ -499,6 +461,44 @@ class Boards(MOEXBase):
         self.ocbu = BoardMulti(self._join(self.url, 'ocbu'))
 
 
+class MarketMulti(MOEXBase):
+
+    def __init__(self, url):
+        super().__init__(url)
+        self.boards = Boards(self._join(self.url, 'boards'))
+
+
+class Markets(MOEXBase):
+
+    def __init__(self, url):
+        super().__init__(url)
+        self.shares = MarketMulti(self._join(self.url, 'shares'))
+        self.bonds = MarketMulti(self._join(self.url, 'bonds'))
+        self.index = MarketMulti(self._join(self.url, 'index'))
+
+
+class EngineMulti(MOEXBase):
+
+    def __init__(self, url):
+        super().__init__(url)
+        self.markets = Markets(self._join(self.url, 'markets'))
+
+
+class Engines(MOEXBase):
+
+    def __init__(self, url):
+        super().__init__(url)
+        self.stock = EngineMulti(self._join(self.url, 'stock'))
+        self.currency = EngineMulti(self._join(self.url, 'currency'))
+        self.futures = EngineMulti(self._join(self.url, 'futures'))
+        self.state = EngineMulti(self._join(self.url, 'state'))
+        self.offboard = EngineMulti(self._join(self.url, 'offboard'))
+        self.otc = EngineMulti(self._join(self.url, 'otc'))
+        self.commodity = EngineMulti(self._join(self.url, 'commodity'))
+        self.interventions = EngineMulti(self._join(self.url, 'interventions'))
+        self.agro = EngineMulti(self._join(self.url, 'agro'))
+
+
 class History(MOEXBase):
 
     def __init__(self, url):
@@ -520,7 +520,7 @@ class MOEX(MOEXBase):
 
 
 moex = MOEX()
-print(moex.index())
+# print(moex.index())
 print(moex.securities())
 print(moex.securities(sid=419728227))
 print(moex.engines.securities())
