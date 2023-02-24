@@ -20,10 +20,10 @@ class MOEXBase:
         return os.path.join(*args)
 
     @staticmethod
-    def _for_normal_dict(text: str) -> dict:
+    def _for_normal_dict(data_dict: dict) -> dict:
         normal_dict = {}
-        raw_dict: dict = json.loads(text)
-        for key, val in raw_dict.items():
+
+        for key, val in data_dict.items():
             if key == 'metadata':
                 continue
             low_vals = [low.lower() for low in val['columns']]
@@ -33,19 +33,31 @@ class MOEXBase:
                 normal_dict[key].append(row)
         return normal_dict
 
-    def _make_request(self, url):
-        result = regular_request(url)
-        if result.status_code == 200:
-            data = self._for_normal_dict(result.text)
-        else:
-            data = {}
+    @staticmethod
+    def _with_metadata(
+            data,
+            code,
+            message=''):
         return {
             'data': data,
             'metadata': {
-                'code': result.status_code,
-                'message': result.reason
+                'code': code,
+                'message': message
             }
         }
+
+    def _make_request(self, url, normal_dict=True):
+        result = regular_request(url)
+        if result.status_code == 200:
+            data = json.loads(result.text)
+            data = self._for_normal_dict(data) if normal_dict else data
+        else:
+            data = {}
+        return self._with_metadata(
+            data,
+            result.status_code,
+            result.reason
+        )
 
     def securities(
             self,
