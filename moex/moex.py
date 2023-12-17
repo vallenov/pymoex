@@ -5,6 +5,11 @@ import json
 import settings
 from helpers import regular_request
 
+# from tmp import x
+#
+# for i in x['boards']['data']:
+#     print(f"self.{i[4].lower()} = BoardMulti(self._join(self.url, '{i[4].lower()}'))")
+
 
 class MOEXBase:
     url = ''
@@ -74,6 +79,7 @@ class MOEXBase:
             if not re.match(r'^\d{4}-\d{2}-\d{2}$', date):
                 raise ValueError('The right format is: YYYY-MM-DD')
             url += f'?date={date}'
+        #return url
         return self._make_request(url)
 
 
@@ -522,17 +528,22 @@ class MOEX(MOEXBase):
 if __name__ == '__main__':
     moex = MOEX()
     # print(moex.index())
-    print(moex.securities())
-    print(moex.securities(sid=419728227))
-    print(moex.engines.securities())
-    print(moex.engines.stock.securities())
-    print(moex.engines.stock.markets.securities(date='2022-03-12'))
-    print(moex.engines.stock.markets.shares.securities())
-    print(moex.engines.stock.markets.bonds.boards.securities(sid=12345))
-    print(moex.engines.stock.markets.bonds.boards.ocby.securities())
-    print(moex.history.engines.stock.markets.bonds.boards.ocby.securities())
-    print(moex.history.engines.securities())
-    print(moex.history.engines.stock.securities(return_type='xml'))
-    print(moex.history.engines.stock.markets.securities())
-    print(moex.history.engines.stock.markets.shares.securities(date='2022-03-12'))
+    #print(moex.securities())
+    #print(moex.securities(sid=419728227))
+    #print(moex.engines.securities())
+    #print(moex.engines.stock.securities())
+    #print(moex.engines.stock.markets.securities(date='2022-03-12'))
+    #print(moex.engines.stock.markets.shares.securities())
+    bnds = moex.history.engines.stock.markets.bonds.boards.tqcb.securities(date='2023-03-30')
+    #print(moex.engines.stock.markets.bonds.boards.ocby.securities())
+    #print(moex.history.engines.stock.markets.bonds.boards.ocby.securities())
+    #print(moex.history.engines.securities())
+    #print(moex.history.engines.stock.securities(return_type='xml'))
+    #print(moex.history.engines.stock.markets.securities())
+    #print(moex.history.engines.stock.markets.shares.securities(date='2022-03-23'))
+    for b in bnds['data'].values():
+        for item in b:
+            if item.get('couponpercent', 0) >= 10:
+                print(item)
+                #print(item['shortname'], item['couponpercent'])
 
